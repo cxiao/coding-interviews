@@ -3,18 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef struct Node Node;
-
-struct Node {
-	int value;
-	Node* next;
-};
-
-typedef struct {
-	Node* head;
-	int length;
-} LinkedList;
+#include "linked-list.h"
 
 Node* nodeInit(int value) {
 	Node* n = malloc(sizeof(Node));
@@ -27,9 +16,9 @@ void nodeDestroy(Node* n) {
 	free(n);
 }
 
-void llInit(LinkedList* ll, int value) {
-	ll->head = nodeInit(value);
-	ll->length = 1;
+void llInit(LinkedList* ll) {
+	ll->head = nodeInit(NULL);
+	ll->length = 0;
 }
 
 void llDestroy(LinkedList* ll) {
@@ -67,6 +56,10 @@ int _llCheckBounds(LinkedList* ll, int index) {
 }
 
 void llAppend(LinkedList* ll, int value) {
+	if (ll->length = 0) {
+		ll->head->value = value;
+		ll->length++;
+	}
 	Node* tail = _llTraverse(ll, ll->length-1);
 	Node* new = nodeInit(value);
 	tail->next = new;
@@ -74,7 +67,18 @@ void llAppend(LinkedList* ll, int value) {
 }
 
 void llInsert(LinkedList* ll, int index, int value) {
+	if (ll->length == 0) {
+		if (index != 0) {
+      printf("ERROR: Index %d is out of list bounds.\n", index);
+			return;
+		}
+		ll->head->value = value;
+		ll->length++;
+		return;
+	}
+
   if (_llCheckBounds(ll, index) != 0) {return;}
+
 	Node* new = nodeInit(value);
 	Node* after = _llTraverse(ll, index);
 	if (index == 0) {
@@ -90,12 +94,16 @@ void llInsert(LinkedList* ll, int index, int value) {
 }
 
 void llDelete(LinkedList* ll, int index) {
-  if (_llCheckBounds(ll, index) != 0) {return;}
-
 	if (ll->length == 1) {
-		llDestroy(ll);
+		if (index != 0) {
+      printf("ERROR: Index %d is out of list bounds.\n", index);
+			return;
+		}
+		ll->head->value = NULL;
 		return;
 	}
+
+  if (_llCheckBounds(ll, index) != 0) {return;}
 
 	Node* after = _llTraverse(ll, index+1);
 	Node* current = _llTraverse(ll, index);
@@ -136,27 +144,4 @@ void llDisplay(LinkedList* ll) {
   }
   sprintf(displayString, "%s%d]", displayString, llValueGet(ll, ll->length-1));
   printf("%s\n", displayString);
-}
-
-int main() {
-	LinkedList l;
-	llInit(&l, 45);
-	llAppend(&l, 4);
-	llAppend(&l, 77);
-	llDisplay(&l);
-	llInsert(&l, 1, 274);
-	llDisplay(&l);
-	llInsert(&l, 0, 1);
-	llDisplay(&l);
-	llDelete(&l, 0);
-	llDisplay(&l);
-	llDelete(&l, 3);
-	llDisplay(&l);
-	llDelete(&l, 3);
-	llDisplay(&l);
-	llDelete(&l, 2);
-	llDisplay(&l);
-	llDelete(&l, 1);
-	llDisplay(&l);
-	llDelete(&l, 0);
 }
