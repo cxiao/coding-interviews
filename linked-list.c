@@ -100,6 +100,7 @@ void llDelete(LinkedList* ll, int index) {
 			return;
 		}
 		ll->head->value = NULL;
+		ll->length--;
 		return;
 	}
 

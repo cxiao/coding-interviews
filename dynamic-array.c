@@ -3,12 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef struct {
-  int size;
-  int capacity;
-  int* data;
-} dynamicArray;
+#include "dynamic-array.h"
 
 void daInit(dynamicArray* da, int array_size) {
   da->size = 0; // zero elements in array at beginning
@@ -81,7 +76,8 @@ void daInsert(dynamicArray* da, int index, int value) {
 
 void daDelete(dynamicArray* da, int index) {
   if (da->size == 1 && index == 0) {
-    da->data[0] = 0; // for now, not allowing zero size
+    da->data[0] = NULL;
+    da->size--;
     return;
   }
   if (_daCheckBounds(da, index) != 0) {return;}
@@ -95,54 +91,58 @@ void daDelete(dynamicArray* da, int index) {
 }
 
 void daDisplay(dynamicArray* da) {
-    int STRING_SIZE = da->size * (10 + 2) + 3;
-    char displayString[STRING_SIZE];
-    int i;
-    sprintf(displayString, "[");
-    for (i = 0; i < da->size-1; i++) {
-      sprintf(displayString, "%s%d, ", displayString, daValueGet(da, i));
-    }
-    sprintf(displayString, "%s%d]", displayString, daValueGet(da, da->size-1));
-    printf("%s\n", displayString);
-}
-
-int main() {
-  int val;
-
-  dynamicArray da;
-  daInit(&da, 2);
-
-  daAppend(&da, 45);
-  daAppend(&da, 99);
-  daAppend(&da, 37);
-
-  daDisplay(&da);
-  printf("Size of array: %d\n", da.size);
-  printf("Capacity of array: %d\n", da.capacity);
-
-  val = daValueGet(&da, 17);
-  printf("Obtained value: %d\n", val);
-  daValueSet(&da, 1, 19);
-  daDisplay(&da);
-
-  daInsert(&da, 1, 13);
-  daDisplay(&da);
-
-  daDelete(&da, 1);
-  daDisplay(&da);
-
-  daDelete(&da, 2);
-  daDisplay(&da);
-
-  daDelete(&da, 0);
-  daDisplay(&da);
-
-  daDelete(&da, 0);
-  daDisplay(&da);
-
+  int STRING_SIZE = da->size * (10 + 2) + 3;
+  char displayString[STRING_SIZE];
   int i;
-  for (i = 0; i < 20000; i++) {
-     daAppend(&da, i);
+  sprintf(displayString, "[");
+  for (i = 0; i < da->size-1; i++) {
+    sprintf(displayString, "%s%d, ", displayString, daValueGet(da, i));
   }
-  daDisplay(&da);
+  sprintf(displayString, "%s%d]", displayString, daValueGet(da, da->size-1));
+  printf("%s\n", displayString);
 }
+
+void daDestroy(dynamicArray* da) {
+  free(da->data);
+}
+
+// int main() {
+//   int val;
+//
+//   dynamicArray da;
+//   daInit(&da, 2);
+//
+//   daAppend(&da, 45);
+//   daAppend(&da, 99);
+//   daAppend(&da, 37);
+//
+//   daDisplay(&da);
+//   printf("Size of array: %d\n", da.size);
+//   printf("Capacity of array: %d\n", da.capacity);
+//
+//   val = daValueGet(&da, 17);
+//   printf("Obtained value: %d\n", val);
+//   daValueSet(&da, 1, 19);
+//   daDisplay(&da);
+//
+//   daInsert(&da, 1, 13);
+//   daDisplay(&da);
+//
+//   daDelete(&da, 1);
+//   daDisplay(&da);
+//
+//   daDelete(&da, 2);
+//   daDisplay(&da);
+//
+//   daDelete(&da, 0);
+//   daDisplay(&da);
+//
+//   daDelete(&da, 0);
+//   daDisplay(&da);
+//
+//   int i;
+//   for (i = 0; i < 20000; i++) {
+//      daAppend(&da, i);
+//   }
+//   daDisplay(&da);
+// }
