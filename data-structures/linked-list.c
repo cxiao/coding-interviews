@@ -56,9 +56,10 @@ int _llCheckBounds(LinkedList* ll, int index) {
 }
 
 void llAppend(LinkedList* ll, int value) {
-	if (ll->length = 0) {
+	if (ll->length == 0) {
 		ll->head->value = value;
 		ll->length++;
+		return;
 	}
 	Node* tail = _llTraverse(ll, ll->length-1);
 	Node* new = nodeInit(value);
