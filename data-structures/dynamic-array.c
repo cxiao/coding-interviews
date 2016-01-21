@@ -8,7 +8,13 @@
 void daInit(dynamicArray* da, int array_size) {
   da->size = 0; // zero elements in array at beginning
   da->capacity = array_size;
-  da->data = malloc(sizeof(int) * da->capacity);
+  da->data = calloc(da->capacity, sizeof(int));
+}
+
+void daInitFull(dynamicArray* da, int array_size) {
+  da->size = array_size; // Set size to equal capacity, ie. have a "full" array
+  da->capacity = array_size;
+  da->data = calloc(da->capacity, sizeof(int));
 }
 
 int _daExpandArray(dynamicArray* da) {
@@ -65,7 +71,7 @@ void daInsert(dynamicArray* da, int index, int value) {
         return;
     }
   }
-  int* tmp = malloc((da->size-index)*sizeof(int)); // need to use temporary ptr because source and destination overlap when moving existing contents
+  int* tmp = calloc(da->size-index, sizeof(int)); // need to use temporary ptr because source and destination overlap when moving existing contents
   memcpy(tmp, &da->data[index], (da->size-index)*sizeof(int)); // Move existing contents of array
   memcpy(&da->data[index] , &value, sizeof(int)); // Insert new item
   memcpy(&da->data[index+1], tmp, (da->size-index)*sizeof(int)); // Replace old items
@@ -82,9 +88,9 @@ void daDelete(dynamicArray* da, int index) {
   }
   if (_daCheckBounds(da, index) != 0) {return;}
 
-  int* tmp = malloc((da->size-index-1)*sizeof(int)); // need to use temporary ptr because source and destination overlap when moving existing contents
-  memcpy(tmp, &da->data[index+1], sizeof tmp); // Move existing contents of array
-  memcpy(&da->data[index], tmp, sizeof tmp); // Replace old item
+  int* tmp = calloc(da->size-index-1, sizeof(int)); // need to use temporary ptr because source and destination overlap when moving existing contents
+  memcpy(tmp, &da->data[index+1], sizeof(tmp)); // Move existing contents of array
+  memcpy(&da->data[index], tmp, sizeof(tmp)); // Replace old item
   free(tmp);
 
   da->size--;
