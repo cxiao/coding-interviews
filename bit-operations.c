@@ -22,13 +22,32 @@ int integerCompare(int a, int b) {
   else { return 1; } // integers equal
 }
 
+// Function to determine number of bits needed to convert integer A to B
+int bitsRequiredForConversion(int a, int b) {
+  int diff = a ^ b;
+  int result = 0;
+  // Keep getting last bit
+  while (diff != 0) { // shift off all bits until we're at 0
+    if (diff & 1 == 1) {
+      result++;
+    }
+    diff = diff >> 1;
+  }
+  return result;
+}
+
 int main(int argc, char* argv[]) {
   int i;
   if (argc != 3) {
     printf("ERROR: Program expects 2 arguments.\n");
     exit(0);
   }
+  int a; int b;
+  a = atoi(argv[1]); b = atoi(argv[2]);
   int result;
   result = integerCompare(atoi(argv[1]), atoi(argv[2]));
+  printf("Result: %d\n", result);
+
+  result = bitsRequiredForConversion(a, b);
   printf("Result: %d\n", result);
 }
